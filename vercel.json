@@ -1,5 +1,15 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api/index" }
-  ]
+  "version": 2,
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.py"
+    }
+  ],
+  "builds": {
+    "functions": {
+      "src": "main.py",
+      "includeFiles": "requirements.txt"
+    }
+  }
 }
