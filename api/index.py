@@ -9,8 +9,8 @@ from typing import Dict, Any
 class Request(BaseModel):
     url: str
     headers: Dict[str, str] = {}
-    payload: Dict[str, str] = {}
-    params: Dict[str, str] = {}
+    payload: Dict[str, Any] = {}
+    params: Dict[str, Any] = {}
 
 
 app = FastAPI()
