@@ -89,6 +89,7 @@ async def process_request(req: Request):
         response["request_info"]["content_type"] = response_type
 
         if not response_type:
+            response["request_info"]["data"] = forwarded_response.content
             return jsonable_encoder(response)
         elif response_type == "application/json":
             response["request_info"]["data"] = forwarded_response.json()
