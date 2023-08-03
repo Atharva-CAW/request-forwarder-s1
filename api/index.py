@@ -88,15 +88,9 @@ async def process_request(req: Request):
         response["success"] = True
         response["request_info"]["content_type"] = response_type
 
-        if not response_type:
-            response["request_info"]["data"] = forwarded_response.content
-            return jsonable_encoder(response)
-        elif response_type == "application/json":
+        if response_type == "application/json":
             response["request_info"]["data"] = forwarded_response.json()
-        elif response_type == "text/html":
-            response["request_info"]["data"] = forwarded_response.text
         else:
-            response["request_info"]["data"] = {}
-            response["message"] = "Response type is not json or html!"
+            response["request_info"]["data"] = forwarded_response.text
 
     return jsonable_encoder(response)
