@@ -69,7 +69,7 @@ async def process_request(req: Request):
     try:
         # Pass the headers and payload to the requests.get function
         forwarded_response = requests.get(
-            req.url, headers=req.headers, json=req.payload
+            req.url, headers=req.headers, params==req.payload
         )
         response_type = (
             forwarded_response.headers.get("content-type").split(";")[0]
