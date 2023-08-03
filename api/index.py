@@ -61,7 +61,7 @@ async def get_ip():
     return jsonable_encoder(response.json())
 
 
-@app.post("/fetch")
+@app.post("/fetch/get")
 async def process_request(req: Request):
     response = {}
     response["request_info"] = {}
@@ -70,6 +70,42 @@ async def process_request(req: Request):
     try:
         # Pass the headers and payload to the requests.get function
         forwarded_response = requests.get(
+            req.url, headers=req.headers, json=req.payload, params=req.params
+        )
+        response_type = (
+            forwarded_response.headers.get("content-type").split(";")[0]
+            if forwarded_response
+            else None
+        )
+    except Exception as e:
+        print(f"Exception in /json request - {e}")
+        response["request_info"]["data"] = forwarded_response.content
+        response["message"] = "Request could not be forwarded! Check the URL!"
+        response["reason"] = f"{e}"
+        response["success"] = False
+    else:
+        response["request_info"]["latency"] = forwarded_response.elapsed.total_seconds()
+        response["request_info"]["status_code"] = forwarded_response.status_code
+        response["success"] = True
+        response["request_info"]["content_type"] = response_type
+
+        if response_type == "application/json":
+            response["request_info"]["data"] = forwarded_response.json()
+        else:
+            response["request_info"]["data"] = forwarded_response.text
+
+    return jsonable_encoder(response)
+
+
+@app.post("/fetch/post")
+async def process_request(req: Request):
+    response = {}
+    response["request_info"] = {}
+
+    forwarded_response = None  # Initialize the variable before the try block
+    try:
+        # Pass the headers and payload to the requests.get function
+        forwarded_response = requests.post(
             req.url, headers=req.headers, json=req.payload, params=req.params
         )
         response_type = (
