@@ -9,7 +9,7 @@ from typing import Dict, Any
 class Request(BaseModel):
     url: str
     headers: Dict[str, str] = {}
-    payload: Any = None
+    payload: Dict[str, str] = {}
     params: Dict[str, str] = {}
 
 
