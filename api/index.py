@@ -10,6 +10,7 @@ class Request(BaseModel):
     url: str
     headers: Dict[str, str] = {}
     payload: Any = None
+    params: Dict[str, str] = {}
 
 
 app = FastAPI()
@@ -69,7 +70,7 @@ async def process_request(req: Request):
     try:
         # Pass the headers and payload to the requests.get function
         forwarded_response = requests.get(
-            req.url, headers=req.headers, params==req.payload
+            req.url, headers=req.headers, json=req.payload, params=params
         )
         response_type = (
             forwarded_response.headers.get("content-type").split(";")[0]
