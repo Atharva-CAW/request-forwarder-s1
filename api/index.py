@@ -3,12 +3,13 @@ from pydantic import BaseModel
 import requests
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse
-from typing import Dict
+from typing import Dict, Any
 
 
 class Request(BaseModel):
     url: str
     headers: Dict[str, str] = {}
+    payload: Any = None
 
 
 app = FastAPI()
@@ -66,8 +67,10 @@ async def process_request(req: Request):
 
     forwarded_response = None  # Initialize the variable before the try block
     try:
-        # Pass the headers to the requests.get function
-        forwarded_response = requests.get(req.url, headers=req.headers)
+        # Pass the headers and payload to the requests.get function
+        forwarded_response = requests.get(
+            req.url, headers=req.headers, json=req.payload
+        )
         response_type = (
             forwarded_response.headers.get("content-type").split(";")[0]
             if forwarded_response
