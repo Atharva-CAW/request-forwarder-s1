@@ -46,7 +46,8 @@ def docs_request():
             </head>
             <body>
                 <h1>This is the request forwarder API!</h1>
-                <h2>Use <span class='post'>POST</span> '/fetch' method and pass the URL of the request to forward in the body.</h2>
+                <h2>Use <span class='post'>POST</span> '/fetch' method and pass the URL, Headers, Payload and Params of the request to forward in the body.</h2>
+                <h2>Use '/fetch/post' for post requests and '/fetch/get' for get requests</h2>
                 <h2>Use <span class='get'>GET</span> '/ip' method to get the IP address on which the server is running.</h2>
                 <h3>Your request will be forwarded via a safe IP ;)</h3>
             </body>
