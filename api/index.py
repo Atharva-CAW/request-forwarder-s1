@@ -78,7 +78,7 @@ async def process_request(req: Request):
         )
     except Exception as e:
         print(f"Exception in /json request - {e}")
-        response["request_info"]["data"] = {}
+        response["request_info"]["data"] = forwarded_response.content
         response["message"] = ("Request could not be forwarded! Check the URL!",)
         response["reason"] = f"{e}"
         response["success"] = False
