@@ -1,28 +1,80 @@
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fpython%2Fflask&demo-title=Flask%20%2B%20Vercel&demo-description=Use%20Flask%202%20on%20Vercel%20with%20Serverless%20Functions%20using%20the%20Python%20Runtime.&demo-url=https%3A%2F%2Fflask-python-template.vercel.app%2F&demo-image=https://assets.vercel.com/image/upload/v1669994156/random/flask.png)
+# Request Forwarder API
 
-# Flask + Vercel
+This is a simple FastAPI-based API that acts as a request forwarder. It allows you to send a POST request with a URL, and the API will forward that request to the provided URL. Additionally, it provides a GET endpoint to get the IP address on which the server is running.
 
-This example shows how to use Flask 2 on Vercel with Serverless Functions using the [Python Runtime](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python).
+## Endpoints
 
-## Demo
+### 1. `/`
 
-https://flask-python-template.vercel.app/
+This endpoint returns an HTML page providing information about the API and how to use it.
 
-## How it Works
+#### Method
 
-This example uses the Web Server Gateway Interface (WSGI) with Flask to enable handling requests on Vercel with Serverless Functions.
+GET
 
-## Running Locally
+#### Response
 
-```bash
-npm i -g vercel
-vercel dev
-```
+- Content-Type: text/html
 
-Your Flask application is now available at `http://localhost:3000`.
+### 2. `/ip`
 
-## One-Click Deploy
+This endpoint retrieves the IP address of the server on which the API is running.
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
+#### Method
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fpython%2Fflask&demo-title=Flask%20%2B%20Vercel&demo-description=Use%20Flask%202%20on%20Vercel%20with%20Serverless%20Functions%20using%20the%20Python%20Runtime.&demo-url=https%3A%2F%2Fflask-python-template.vercel.app%2F&demo-image=https://assets.vercel.com/image/upload/v1669994156/random/flask.png)
+GET
+
+#### Response
+
+- Content-Type: application/json
+
+### 3. `/fetch`
+
+This endpoint is used to forward requests to a provided URL.
+
+#### Method
+
+POST
+
+#### Request Body
+
+- `url` (str): The URL to which the request should be forwarded.
+
+#### Response
+
+The response will be in JSON format and will contain information about the forwarded request.
+
+- If the request was forwarded successfully:
+{
+"success": true,
+"request_info": {
+"latency": (float) Latency in seconds,
+"status_code": (int) Status code of the forwarded response,
+"content_type": (str) Content type of the forwarded response,
+"data": (object) The data received in the forwarded response (JSON or HTML)
+}
+
+- If the request could not be forwarded:
+{
+"success": false,
+"request_info": {
+"data": {},
+"message": "Request could not be forwarded! Check the URL!",
+"reason": (str) Reason for the failure
+}
+
+
+## Running the API
+
+1. Make sure you have Python and `pip` installed on your system.
+2. Install the required packages by running:
+3. Save the provided code in a Python file, for example, `main.py`.
+4. Run the API using `uvicorn`:
+5. The API will start running locally on `http://127.0.0.1:8000`.
+
+## Usage
+
+1. Open your web browser and navigate to `http://127.0.0.1:8000/` to access the API documentation page.
+2. Use the provided endpoints to interact with the API as described above.
+
+Note: The API may forward requests to the provided URL, so be cautious when using it to avoid potential security risks. It is recommended to use this API for testing purposes only and not to forward sensitive or unauthorized requests.
