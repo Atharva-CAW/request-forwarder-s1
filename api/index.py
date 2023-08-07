@@ -71,16 +71,19 @@ async def process_request(req: Request):
     try:
         # Pass the headers and payload to the requests.get function
         forwarded_response = requests.get(
-            req.url, headers=req.headers, params=req.params
+            req.url, headers=req.headers, params=req.params, allow_redirects=True
         )
         response_type = (
             forwarded_response.headers.get("content-type").split(";")[0]
             if forwarded_response
             else None
         )
+        print(forwarded_response)
     except Exception as e:
         print(f"Exception in /json request - {e}")
-        response["request_info"]["data"] = forwarded_response.content
+        response["request_info"]["data"] = (
+            forwarded_response.content if forwarded_response else ""
+        )
         response["message"] = "Request could not be forwarded! Check the URL!"
         response["reason"] = f"{e}"
         response["success"] = False
@@ -107,7 +110,11 @@ async def process_request(req: Request):
     try:
         # Pass the headers and payload to the requests.get function
         forwarded_response = requests.post(
-            req.url, headers=req.headers, json=req.payload, params=req.params
+            req.url,
+            headers=req.headers,
+            json=req.payload,
+            params=req.params,
+            allow_redirects=True,
         )
         response_type = (
             forwarded_response.headers.get("content-type").split(";")[0]
