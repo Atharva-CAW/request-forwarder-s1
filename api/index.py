@@ -96,9 +96,7 @@ async def process_request_get(req: Request):
         if response_type == "application/json":
             response["request_info"]["data"] = forwarded_response.json()
         else:
-            response["request_info"]["data"] = forwarded_response.text.replace(
-                "\n", ""
-            ).strip()
+            response["request_info"]["data"] = forwarded_response.text
 
     return jsonable_encoder(response)
 
@@ -124,9 +122,7 @@ async def process_request_post(req: Request):
         )
     except Exception as e:
         print(f"Exception in /json request - {e}")
-        response["request_info"]["data"] = forwarded_response.text.replace(
-            "\n", ""
-        ).strip()
+        response["request_info"]["data"] = forwarded_response.content
         response["message"] = "Request could not be forwarded! Check the URL!"
         response["reason"] = f"{e}"
         response["success"] = False
@@ -139,8 +135,6 @@ async def process_request_post(req: Request):
         if response_type == "application/json":
             response["request_info"]["data"] = forwarded_response.json()
         else:
-            response["request_info"]["data"] = forwarded_response.text.replace(
-                "\n", ""
-            ).strip()
+            response["request_info"]["data"] = forwarded_response.text
 
     return jsonable_encoder(response)
