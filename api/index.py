@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse
 from typing import Dict, Any
 
 
+# Request Body Schema
 class Request(BaseModel):
     url: str
     headers: Dict[str, str] = {}
@@ -63,13 +64,12 @@ async def get_ip():
 
 
 @app.post("/fetch/get")
-async def process_request(req: Request):
+async def process_request_get(req: Request):
     response = {}
     response["request_info"] = {}
 
-    forwarded_response = None  # Initialize the variable before the try block
+    forwarded_response = None
     try:
-        # Pass the headers and payload to the requests.get function
         forwarded_response = requests.get(
             req.url, headers=req.headers, params=req.params, allow_redirects=True
         )
@@ -96,19 +96,20 @@ async def process_request(req: Request):
         if response_type == "application/json":
             response["request_info"]["data"] = forwarded_response.json()
         else:
-            response["request_info"]["data"] = forwarded_response.text
+            response["request_info"]["data"] = forwarded_response.text.replace(
+                "\n", ""
+            ).strip()
 
     return jsonable_encoder(response)
 
 
 @app.post("/fetch/post")
-async def process_request(req: Request):
+async def process_request_post(req: Request):
     response = {}
     response["request_info"] = {}
 
-    forwarded_response = None  # Initialize the variable before the try block
+    forwarded_response = None
     try:
-        # Pass the headers and payload to the requests.get function
         forwarded_response = requests.post(
             req.url,
             headers=req.headers,
@@ -123,7 +124,9 @@ async def process_request(req: Request):
         )
     except Exception as e:
         print(f"Exception in /json request - {e}")
-        response["request_info"]["data"] = forwarded_response.content
+        response["request_info"]["data"] = forwarded_response.text.replace(
+            "\n", ""
+        ).strip()
         response["message"] = "Request could not be forwarded! Check the URL!"
         response["reason"] = f"{e}"
         response["success"] = False
@@ -136,6 +139,8 @@ async def process_request(req: Request):
         if response_type == "application/json":
             response["request_info"]["data"] = forwarded_response.json()
         else:
-            response["request_info"]["data"] = forwarded_response.text
+            response["request_info"]["data"] = forwarded_response.text.replace(
+                "\n", ""
+            ).strip()
 
     return jsonable_encoder(response)
